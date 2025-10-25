@@ -1,10 +1,16 @@
 import streamlit as st
 import requests
 import os
+from dotenv import load_dotenv
 
 # ========== CONFIG ==========
-BOT_TOKEN = "8432820657:AAHJTUIjxEuDEb647sZq8oYVUS5sdl23zdE"
-CHAT_ID = "1599595167"
+# Load environment variables
+load_dotenv()
+
+# Get credentials from environment variables
+BOT_TOKEN = os.getenv("BOT_TOKEN", "")
+CHAT_ID = os.getenv("CHAT_ID", "")
+
 API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}/"
 DOWNLOAD_DIR = "downloads"
 # ============================
@@ -15,6 +21,11 @@ st.set_page_config(page_title="Telegram Uploader Bot", page_icon="📤", layout=
 
 st.title("📤 Telegram Uploader Bot (Advanced Mode)")
 st.caption("Upload any file or video to send directly to Telegram via your bot.")
+
+# Check if credentials are configured
+if not BOT_TOKEN or not CHAT_ID:
+    st.error("❌ Configuration Error: Please set BOT_TOKEN and CHAT_ID environment variables")
+    st.stop()
 
 uploaded_file = st.file_uploader("Choose a file to upload", type=None)
 
@@ -39,6 +50,6 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.subheader("🔧 Bot Configuration")
-st.write(f"**Bot Token:** `{BOT_TOKEN}`")
-st.write(f"**Chat ID:** `{CHAT_ID}`")
+st.write(f"**Bot Token:** `{'*' * len(BOT_TOKEN) if BOT_TOKEN else 'Not set'}`")
+st.write(f"**Chat ID:** `{'*' * len(CHAT_ID) if CHAT_ID else 'Not set'}`")
 st.write("Make sure your bot has permission to send messages to the chat or channel.")
